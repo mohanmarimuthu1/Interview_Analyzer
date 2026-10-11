@@ -1,56 +1,79 @@
-# Interview Analyzer
+# InterviewLens
 
-An automated system designed to evaluate and score candidate interview performance, achieving an accuracy of 88.7% on the designated test set.
+Practice tool for job interviews. Record yourself answering a question and get
+feedback on how you came across: where you looked, head movement, facial
+expression, speaking rate, filler words and pauses. Every score comes with the
+evidence behind it.
 
----
+This is v2 of my IEEE 2025 paper *"A Real-Time Multi-Model System for
+Personality and Interview Performance Analysis Using Transformer-Based Feature
+Fusion"*. v1 was visual only, per frame, with concat + MLP fusion and a small
+private validation set. v2 adds audio and text, models time, uses
+cross-attention fusion, and is evaluated on public benchmarks with human
+labels, a fairness audit and calibrated output.
 
-## Architecture
+It is meant for candidates, not employers. See [ETHICS.md](ETHICS.md).
 
-The system follows a modular pipeline designed to ingest candidate evaluation data, process semantic and categorical features, and generate accurate performance predictions and feedback scores.
+## Status
 
-📂 Interview_Analyzer/
-├── 📁 data/             # Dataset storage and preprocessing scripts
-├── 📁 models/           # Trained model artifacts and inference logic
-├── 📁 src/              # Core feature extraction and evaluation modules
-├── 📄 main.py           # Pipeline entry point for evaluation and scoring
-└── 📄 requirements.txt  # Project dependencies
+| Milestone | What | State |
+|---|---|---|
+| M0 | Repo scaffold, CI, configs, download script | done |
+| M1 | Face pipeline (MediaPipe crops, FPS benchmark) | next |
+| M2 | Emotion (FER2013 / FER+) | - |
+| M3 | Head pose (300W-LP -> AFLW2000, BIWI) | - |
+| M4 | Gaze (MPIIFaceGaze) | - |
+| M5 | Audio + text features | - |
+| M6 | Fusion + baselines + ablations | - |
+| M7 | Fairness + calibration | - |
+| M8 | Real-time app | - |
+| M9 | Release | - |
 
+No results yet. Result tables will be generated from run logs, not typed by hand.
 
-1. **Data Ingestion & Preprocessing:** Raw interview responses and structured metrics are cleaned, normalized, and tokenized.
-2. **Feature Engineering:** Extracts semantic embeddings alongside traditional categorical features (such as experience indicators, communication scores, and technical keywords).
-3. **Classification & Scoring Engine:** Passes the processed features through an optimized model pipeline to output final candidate viability scores.
+## Setup
 
----
+Python 3.11 and [uv](https://docs.astral.sh/uv/).
 
-## Dataset
+```bash
+uv venv --python 3.11
+uv pip install -e ".[dev]"          # add ,track for wandb
+pre-commit install
+```
 
-* **Source & Composition:** The model is trained on a curated dataset comprising structured interview transcripts, historical candidate performance records, and multi-dimensional evaluation metrics.
-* **Features:** Includes a mix of natural language text features (derived from transcribed responses) and numerical evaluation attributes rated by human domain experts.
-* **Preprocessing:** Handled missing values, standardized numerical distributions, and vectorized text fields using robust embedding techniques.
+## Usage
 
----
+```bash
+python -m interviewlens.train --help            # hydra config + overrides
+python -m interviewlens.train train.epochs=5 wandb.enabled=true
+bash scripts/download_public.sh                 # FER2013/FER+, 300W-LP, AFLW2000, MPIIFaceGaze
+```
 
-## Model Evaluation & Performance (88.7% Accuracy)
+## Checks
 
-To validate the robustness of the system, rigorous evaluation protocols were applied:
+```bash
+ruff check . && ruff format --check .
+mypy
+pytest
+```
 
-* **Metric:** Overall predictive accuracy (% of correct classification/scoring outcomes matching expert human evaluations).
-* **Test Set Size:** Evaluated on a held-out test split consisting of 15% of the total dataset, ensuring the model was tested on unseen candidate profiles.
-* **Baseline Comparison:** Outperformed the baseline rule-based heuristic model (which achieved ~72.1% accuracy) and a standard logistic regression baseline (~78.4%) by effectively capturing non-linear interactions between candidate communication skills and technical competency markers.
+CI runs the same on every push.
 
----
+## Layout
 
-## Getting Started Locally
+```
+configs/              hydra configs
+data/                 gitignored, only README, LICENSES.md and splits/
+scripts/              dataset download / prep
+src/interviewlens/    package code
+tests/
+```
 
-### 1. Clone the repository
-bash
-git clone [https://github.com/mohanmarimuthu1/Interview_Analyzer.git](https://github.com/mohanmarimuthu1/Interview_Analyzer.git)
-cd Interview_Analyzer
+## Data
 
-2. Install dependencies
-Bash
-pip install -r requirements.txt
+Raw data is never committed. Dataset sources and licenses are in
+[data/LICENSES.md](data/LICENSES.md).
 
-3. Run the analyzer pipeline
-Bash
-python main.py
+## License
+
+MIT
