@@ -1,0 +1,10 @@
+defaults:
+  - train: default
+  - _self_
+
+seed: 42
+
+wandb:
+  enabled: false
+  project: interviewlens
+  mode: offline
