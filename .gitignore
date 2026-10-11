@@ -1,0 +1,31 @@
+# python
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+uv.lock
+
+# data, weights, runs - never committed
+data/*
+!data/README.md
+!data/LICENSES.md
+!data/splits/
+*.pt
+*.pth
+*.onnx
+*.ckpt
+outputs/
+multirun/
+wandb/
+
+# secrets
+.env
+
+# local notes
+CLAUDE.md
+plan.md
+process.md
+.claude/
