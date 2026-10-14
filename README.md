@@ -19,7 +19,7 @@ It is meant for candidates, not employers. See [ETHICS.md](ETHICS.md).
 | Milestone | What | State |
 |---|---|---|
 | M0 | Repo scaffold, CI, configs, download script | done |
-| M1 | Face pipeline (MediaPipe crops, FPS benchmark) | next |
+| M1 | Face pipeline (MediaPipe crops, FPS benchmark) | done |
 | M2 | Emotion (FER2013 / FER+) | - |
 | M3 | Head pose (300W-LP -> AFLW2000, BIWI) | - |
 | M4 | Gaze (MPIIFaceGaze) | - |
@@ -37,7 +37,7 @@ Python 3.11 and [uv](https://docs.astral.sh/uv/).
 
 ```bash
 uv venv --python 3.11
-uv pip install -e ".[dev]"          # add ,track for wandb
+uv pip install -e ".[dev,vision]"   # add ,track for wandb
 pre-commit install
 ```
 
@@ -47,6 +47,7 @@ pre-commit install
 python -m interviewlens.train --help            # hydra config + overrides
 python -m interviewlens.train train.epochs=5 wandb.enabled=true
 bash scripts/download_public.sh                 # FER2013/FER+, 300W-LP, AFLW2000, MPIIFaceGaze
+python scripts/bench_face.py --video samples/test.mp4   # face pipeline FPS benchmark
 ```
 
 ## Checks
