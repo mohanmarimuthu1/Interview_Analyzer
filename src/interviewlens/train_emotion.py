@@ -135,7 +135,8 @@ def main(cfg: DictConfig) -> None:
             total += loss.item() * len(y)
             n += len(y)
 
-        val_acc = accuracy(confusion_matrix(*_predict(model, loaders["val"], device), len(classes)))
+        y_true, y_pred = _predict(model, loaders["val"], device)
+        val_acc = accuracy(confusion_matrix(y_true, y_pred, len(classes)))
         log.info("epoch %d loss %.4f val_acc %.4f", epoch, total / n, val_acc)
         if run:
             run.log({"epoch": epoch, "train_loss": total / n, "val_acc": val_acc})
@@ -144,7 +145,8 @@ def main(cfg: DictConfig) -> None:
             torch.save(model.state_dict(), best_path)
 
     model.load_state_dict(torch.load(best_path, map_location=device))
-    cm = confusion_matrix(*_predict(model, loaders["test"], device), len(classes))
+    y_true, y_pred = _predict(model, loaders["test"], device)
+    cm = confusion_matrix(y_true, y_pred, len(classes))
     metrics = {
         "run": cfg.run_name,
         "labels": cfg.data.labels,
