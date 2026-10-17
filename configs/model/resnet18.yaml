@@ -1,0 +1,3 @@
+arch: resnet18
+pretrained: true
+drop_rate: 0.2

@@ -1,0 +1,11 @@
+epochs: 30
+batch_size: 128
+lr: 5.0e-4
+weight_decay: 0.05
+label_smoothing: 0.1
+class_balance: false  # inverse-frequency class weights in the loss
+aug:
+  hflip: true
+  rotate: 10
+  jitter: 0.3
+  randaugment: true

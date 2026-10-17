@@ -1,0 +1,5 @@
+csv: data/raw/fer2013/fer2013.csv
+ferplus_csv: data/raw/ferplus/fer2013new.csv
+labels: fer2013  # fer2013 | ferplus
+img_size: 112
+num_workers: 2

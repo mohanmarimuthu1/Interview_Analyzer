@@ -1,0 +1,14 @@
+defaults:
+  - data: fer
+  - model: resnet18
+  - train: emotion
+  - _self_
+
+seed: 42
+run_name: ${data.labels}_${model.arch}_s${seed}
+reports_dir: reports/emotion
+
+wandb:
+  enabled: false
+  project: interviewlens
+  mode: offline
