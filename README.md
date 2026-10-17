@@ -20,7 +20,7 @@ It is meant for candidates, not employers. See [ETHICS.md](ETHICS.md).
 |---|---|---|
 | M0 | Repo scaffold, CI, configs, download script | done |
 | M1 | Face pipeline (MediaPipe crops, FPS benchmark) | done |
-| M2 | Emotion (FER2013 / FER+) | - |
+| M2 | Emotion (FER2013 / FER+) | code + tests done, training on Colab pending |
 | M3 | Head pose (300W-LP -> AFLW2000, BIWI) | - |
 | M4 | Gaze (MPIIFaceGaze) | - |
 | M5 | Audio + text features | - |
@@ -37,7 +37,7 @@ Python 3.11 and [uv](https://docs.astral.sh/uv/).
 
 ```bash
 uv venv --python 3.11
-uv pip install -e ".[dev,vision]"   # add ,track for wandb
+uv pip install -e ".[dev,vision]"   # add ,train for torch/timm, ,track for wandb
 pre-commit install
 ```
 
@@ -48,7 +48,11 @@ python -m interviewlens.train --help            # hydra config + overrides
 python -m interviewlens.train train.epochs=5 wandb.enabled=true
 bash scripts/download_public.sh                 # FER2013/FER+, 300W-LP, AFLW2000, MPIIFaceGaze
 python scripts/bench_face.py --video samples/test.mp4   # face pipeline FPS benchmark
+python -m interviewlens.train_emotion data.labels=ferplus model=convnext_t   # M2 emotion
 ```
+
+GPU training runs on Colab: open `notebooks/m2_emotion_colab.ipynb` on a T4
+runtime. It writes runs and `reports/emotion/<run>/` to Google Drive.
 
 ## Checks
 
@@ -65,6 +69,7 @@ CI runs the same on every push.
 ```
 configs/              hydra configs
 data/                 gitignored, only README, LICENSES.md and splits/
+notebooks/            colab runners, no core logic
 scripts/              dataset download / prep
 src/interviewlens/    package code
 tests/
